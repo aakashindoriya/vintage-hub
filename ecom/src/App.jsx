@@ -7,14 +7,13 @@ import { getProducts } from './redux/actions/productActions'
 import AllRoutes from './routes/AllRoutes'
 
 function App() {
- const dispatch=useDispatch()
- useEffect(()=>{
-  dispatch(getProducts())
- },[])  
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getProducts())
+  }, [])
   return (
-
     <>
-    <AllRoutes/>
+      <AllRoutes />
     </>
   )
 }

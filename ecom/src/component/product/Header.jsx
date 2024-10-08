@@ -5,7 +5,7 @@ function Header() {
     const navigate = useNavigate();
     return (
         <Box as="nav" bg="gray.800" color="white" p={4}>
-            <Flex justify="space-between" align="center" maxW="7xl" mx="auto">
+            <Flex justify="space-around" align="center" maxW="7xl" mx="auto">
                 <Heading size="lg" letterSpacing="tight">
                     <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
                         Vintage Hub
