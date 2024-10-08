@@ -1,31 +1,45 @@
-
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Box, Flex, Heading, Text, Button } from '@chakra-ui/react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
+    const navigate = useNavigate();
     return (
-        <Box as="nav" className="bg-gray-800 text-white p-4">
-            <Flex justify="space-between" align="center" className="max-w-7xl mx-auto">
-                <Heading size="lg" className="tracking-tight">
-                    <Link to="/" className="text-white hover:text-gray-300">
-                    Ecommerce</Link>
+        <Box as="nav" bg="gray.800" color="white" p={4}>
+            <Flex justify="space-between" align="center" maxW="7xl" mx="auto">
+                <Heading size="lg" letterSpacing="tight">
+                    <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                        Vintage Hub
+                    </Link>
                 </Heading>
-                <Flex className="space-x-8">
-                    <Link to='/products' className='hover:underline'>
-                        <Text>Products</Text>
+                <Flex spacing={8} gap={4} alignItems='center'>
+                    <Link to='/products'>
+                        <Text as="span" _hover={{ textDecoration: 'underline' }}>
+                            Products
+                        </Text>
                     </Link>
-                    <Link to='/cart' className='hover:underline'>
-                        <Text>Cart()</Text>
+                    <Link to='/cart'>
+                        <Text as="span" _hover={{ textDecoration: 'underline' }}>
+                            Cart()
+                        </Text>
                     </Link>
-                    <Link to='/contact' className='hover:underline'>
-                        <Text>Contact</Text>
+                    <Link to='/contact'>
+                        <Text as="span" _hover={{ textDecoration: 'underline' }}>
+                            Contact
+                        </Text>
                     </Link>
-                    <Link to='/blogs' className='hover:underline'>
-                        <Text>Blogs</Text>
+                    <Link to='/blogs'>
+                        <Text as="span" _hover={{ textDecoration: 'underline' }}>
+                            Blogs
+                        </Text>
                     </Link>
-                    <Link to='/about' className='hover:underline'>
-                        <Text>About</Text>
+                    <Link to='/about'>
+                        <Text as="span" _hover={{ textDecoration: 'underline' }}>
+                            About
+                        </Text>
                     </Link>
+                    <Button onClick={navigate('/')}>
+                        Login/SignUp
+                    </Button>
                 </Flex>
             </Flex>
         </Box>

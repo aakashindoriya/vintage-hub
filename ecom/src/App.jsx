@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { useDispatch } from 'react-redux'
 import { getProducts } from './redux/actions/productActions'
+import AllRoutes from './routes/AllRoutes'
 
 function App() {
  const dispatch=useDispatch()
@@ -13,7 +14,7 @@ function App() {
   return (
 
     <>
-     <span>app</span>
+    <AllRoutes/>
     </>
   )
 }
