@@ -1,13 +1,22 @@
+import { Box } from '@chakra-ui/react'
 import React from 'react'
+import Slider from '../component/Slider'
+import { CarouselData } from '../component/CaraouselData'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <>
+      <Box>
+        <Box as='section' id='Slider-Section' >
+          <Slider i={CarouselData} />
+        </Box>
+        {/* <FeaturedProducts /> */}
+      </Box>
+    </>
   )
 }
 
 export default Home
-
 
 // VITE_FIREBASE_API_KEY=AIzaSyA2z3rrtxUqm34wMI3Lu1hRRbCK_InHV20
 // VITE_FIREBASE_AUTH_DOMAIN= vintage-hub-308b0.firebaseapp.com
