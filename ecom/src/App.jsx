@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { useDispatch } from 'react-redux'
 import { getProducts } from './redux/actions/productActions'
+import AllRoutes from './routes/AllRoutes'
 import SignupCard from './pages/LoginSignup'
 
 function App() {
@@ -15,7 +16,6 @@ function App() {
 
     <>
      <span>app</span>
-     <SignupCard/>
     </>
   )
 }
