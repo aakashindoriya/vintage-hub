@@ -1,66 +1,26 @@
 import { useEffect, useState } from "react";
-import {
-    Box,
-    Grid,
-    Spinner,
-    Text,
-    Button,
-    Stack,
-    Image,
-    Center,
-    useColorModeValue,
-    Heading,
-} from "@chakra-ui/react";
-// import { Link } from "react-router-dom"; 
+import { Box, Spinner, Text, Button, Input, Select } from "@chakra-ui/react";
+import { ProductCarouselData } from "../component/ProductCarouselData";
+import ProductCard from "../component/product/ProductCard"; 
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../redux/actions/productActions";
-// import { addItem, incrementQuantity, decrementQuantity } from "../redux/slices/cartSlice"; 
-import ProductCard from "../component/product/ProductCard";
+import { getProducts } from "../redux/actions/productActions"; 
+import ProductSlider from "../component/ProductSlider";
 
 const Products = () => {
     const dispatch = useDispatch();
     const { products, loading, error } = useSelector((state) => state.product);
-    // const cartItems = useSelector((state) => state.cart.items);
-    
-    const [page, setPage] = useState(1);
-    const itemsPerPage = 10;
+
+    // State for filters and sorting
+    const [searchTerm, setSearchTerm] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('');
+    const [ratingFilter, setRatingFilter] = useState(null); 
+    const [sortOrder, setSortOrder] = useState('lowToHigh'); 
+    const itemsPerPage = 5; 
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         dispatch(getProducts());
     }, [dispatch]);
-
-    const indexOfLastItem = page * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
-
-    const handleNextPage = () => {
-        if (page < Math.ceil(products.length / itemsPerPage)) {
-            setPage((prev) => prev + 1);
-        }
-    };
-
-    const handlePrevPage = () => {
-        if (page > 1) {
-            setPage((prev) => prev - 1);
-        }
-    };
-
-    // const handleAddToCart = (product) => {
-    //     const existingItem = cartItems.find(item => item.id === product.id);
-    //     if (existingItem) {
-    //         dispatch(incrementQuantity(product.id));
-    //     } else {
-    //         dispatch(addItem(product)); 
-    //     }
-    // };
-
-    // const handleIncrement = (id) => {
-    //     dispatch(incrementQuantity(id));
-    // };
-
-    // const handleDecrement = (id) => {
-    //     dispatch(decrementQuantity(id));
-    // };
 
     if (loading) {
         return (
@@ -82,99 +42,83 @@ const Products = () => {
         return <Text>No products found.</Text>;
     }
 
+    // Filter logic
+    const filteredProducts = products.filter(product => {
+        const matchesSearch = (product.name || "").toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
+        const matchesRating = ratingFilter ? product.rating >= ratingFilter : true; // Assuming rating is numeric
+        return matchesSearch && matchesCategory && matchesRating;
+    });
+
+    // Sort logic
+    const sortedProducts = filteredProducts.sort((a, b) => {
+        return sortOrder === 'lowToHigh' ? a.price - b.price : b.price - a.price;
+    });
+
+    // Pagination
+    const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+
     return (
-        <Box p={6}>
-            <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
-                {currentProducts.map((product) => {
-            
-                    return (
-                        <ProductCard key={product.id} product={product} />
-                        // <Center key={product.id} py={12}>
-                        //     <Link to={`/products/${product.id}`}> 
-                        //         <Box
-                        //             role={'group'}
-                        //             p={6}
-                        //             maxW={'330px'}
-                        //             w={'full'}
-                        //             bg={useColorModeValue('white', 'gray.800')}
-                        //             boxShadow={'2xl'}
-                        //             rounded={'lg'}
-                        //             pos={'relative'}
-                        //             zIndex={1}
-                        //         >
-                        //             <Box
-                        //                 rounded={'lg'}
-                        //                 mt={-12}
-                        //                 pos={'relative'}
-                        //                 height={'230px'}
-                        //                 _after={{
-                        //                     transition: 'all .3s ease',
-                        //                     content: '""',
-                        //                     w: 'full',np
-                        //                     h: 'full',
-                        //                     pos: 'absolute',
-                        //                     top: 5,
-                        //                     left: 0,
-                        //                     backgroundImage: `url(${product.image})`,
-                        //                     filter: 'blur(15px)',
-                        //                     zIndex: -1,
-                        //                 }}
-                        //                 _groupHover={{
-                        //                     _after: {
-                        //                         filter: 'blur(20px)',
-                        //                     },
-                        //                 }}
-                        //             >
-                        //                 <Image
-                        //                     rounded={'lg'}
-                        //                     height={230}
-                        //                     width={282}
-                        //                     objectFit={'cover'}
-                        //                     src={product.image}
-                        //                     alt={product.title}
-                        //                 />
-                        //             </Box>
-                        //             <Stack pt={10} align={'center'}>
-                        //                 <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-                        //                     {product.brand} 
-                        //                 </Text>
-                        //                 <Heading fontSize={'lg'} fontFamily={'body'} fontWeight={500} noOfLines={1}>
-                        //                     {product.title}
-                        //                 </Heading>
-                        //                 <Stack direction={'row'} align={'center'}>
-                        //                     <Text fontWeight={800} fontSize={'xl'}>
-                        //                         ${product.price}
-                        //                     </Text>
-                        //                     <Text textDecoration={'line-through'} color={'gray.600'}>
-                        //                         ${product.originalPrice} 
-                        //                     </Text>
-                        //                 </Stack>
-                        //                 {cartItem ? (
-                        //                     <Stack direction="row" align="center">
-                        //                         <Button onClick={() => handleDecrement(product.id)}>-</Button>
-                        //                         <Text>{cartItem.quantity}</Text>
-                        //                         <Button onClick={() => handleIncrement(product.id)}>+</Button>
-                        //                     </Stack>
-                        //                 ) : (
-                        //                     <Button 
-                        //                         colorScheme="teal" 
-                        //                         onClick={() => handleAddToCart(product)}
-                        //                     >
-                        //                         Add to Cart
-                        //                     </Button>
-                        //                 )}
-                        //             </Stack>
-                        //         </Box>
-                        //     </Link>
-                        // </Center> const cartItem = cartItems.find(item => item.id === product.id);
-                    );
-                })}
-            </Grid>
-            <Box mt={6} display="flex" justifyContent="space-between">
-                <Button onClick={handlePrevPage} disabled={page === 1}>
+        <Box>
+            <Box as="section" id="Slider-Section" mb={10}>
+                <ProductSlider i={ProductCarouselData} />
+            </Box>
+
+            {/* Filter and Search UI */}
+            <Box display="flex" justifyContent="space-between" mb={6}>
+                <Input 
+                    placeholder="Search products..." 
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                />
+                <Select 
+                    placeholder="Select category"
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                >
+                    <option value="category1">Category 1</option>
+                    <option value="category2">Category 2</option>
+                    {/* Add more categories as needed */}
+                </Select>
+                <Select 
+                    placeholder="Select rating"
+                    onChange={(e) => setRatingFilter(Number(e.target.value))}
+                >
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </Select>
+                <Select 
+                    onChange={(e) => setSortOrder(e.target.value)}
+                >
+                    <option value="lowToHigh">Price: Low to High</option>
+                    <option value="highToLow">Price: High to Low</option>
+                </Select>
+            </Box>
+
+            {/* Product Grid */}
+            <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6} p={10} mt={-8}>
+                {sortedProducts.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                ))}
+            </Box>
+
+            {/* Pagination Controls */}
+            <Box mt={6} display="flex" justifyContent="center" alignItems="center">
+                <Button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))} disabled={currentPage === 0}>
                     Previous
                 </Button>
-                <Button onClick={handleNextPage} disabled={page === Math.ceil(products.length / itemsPerPage)}>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <Button 
+                        key={index} 
+                        onClick={() => setCurrentPage(index)} 
+                        variant={currentPage === index ? "solid" : "outline"}
+                        mx={1}
+                    >
+                        {index + 1}
+                    </Button>
+                ))}
+                <Button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))} disabled={currentPage === totalPages - 1}>
                     Next
                 </Button>
             </Box>
@@ -183,4 +127,3 @@ const Products = () => {
 };
 
 export default Products;
-

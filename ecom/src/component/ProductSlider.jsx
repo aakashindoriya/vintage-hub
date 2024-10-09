@@ -26,7 +26,7 @@ const ProductSlider = ({ i }) => {
                     height="400px" 
                 >
                     <img 
-                        src={item.img}
+                        src={item.img} 
                         alt={`Product image ${index + 1}`} 
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                     />
