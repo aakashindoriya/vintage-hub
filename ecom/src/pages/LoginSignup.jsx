@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { login, signup, logout, resetAuthState } from '../redux/slices/AuthSlice'; 
+import { login, signup,  resetAuthState } from '../redux/slices/AuthSlice'; 
 import { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -53,6 +53,11 @@ export default function AuthCard() {
     setEmail('');
     setPassword('');
   };
+  const handleSignUp = () => {
+    setIsLogin((prev) => !prev);
+    navigate('/login')
+  };
+
 
   // const handleLogout = async () => {
   //   await dispatch(logout());
@@ -136,7 +141,7 @@ export default function AuthCard() {
                 <Text align={'center'}>
                   {isLogin ? (
                     <>
-                      Don't have an account? <Link color={'blue.400'} onClick={handleToggleForm}>Sign up</Link>
+                      Don't have an account? <Link color={'blue.400'} onClick={handleSignUp}>Sign up</Link>
                     </>
                   ) : (
                     <>
