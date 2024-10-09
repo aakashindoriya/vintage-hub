@@ -1,57 +1,74 @@
-import { Box, Image, Text, Button, VStack } from '@chakra-ui/react';
+'use client'
 
-function ProductCard({ item }) {
+import {
+  Box,
+  Center,
+  useColorModeValue,
+  Heading,
+  Text,
+  Stack,
+  Image,
+} from '@chakra-ui/react'
+
+export default function ProductCard({item}) {
   return (
-    <Box
-      borderRadius="lg"
-      overflow="hidden"
-      boxShadow="2xl"
-      _hover={{ transform: "scale(1.05)", transition: "0.4s ease-in-out" }}
-      bg="rgba(255, 255, 255, 0.2)" // Glassmorphism background effect
-      backdropFilter="blur(10px)" // Blurring effect for glass feel
-      maxW="sm"
-      h="500px" // Adjusted height for a more spacious layout
-      mx="auto"
-      display="flex"                
-      flexDirection="column"
-      justifyContent="space-evenly"
-      border="1px solid rgba(255, 255, 255, 0.3)" // Light border to enhance the glass effect
-      p={4}
-    >
-      <Box display="flex" justifyContent="center">
-        <Image
-          src={item.image}
-          alt={item.title}
-          w="70%"
-          borderRadius="md"
-        />
+    <Center py={12}>
+      <Box
+        role={'group'}
+        p={6}
+        maxW={'330px'}
+        w={'full'}
+        bg={useColorModeValue('white', 'gray.800')}
+        boxShadow={'2xl'}
+        rounded={'lg'}
+        pos={'relative'}
+        zIndex={1}>
+        <Box
+          rounded={'lg'}
+          mt={-12}
+          p={4}
+          pos={'relative'}
+          height={'230px'}
+          _after={{
+            transition: 'all .3s ease',
+            content: '""',
+            w: 'full',
+            h: 'full',
+            pos: 'absolute',
+            top: 5,
+            left: 0,
+            backgroundImage: `url(${item.image})`,
+            filter: 'blur(15px)',
+            zIndex: -1,
+          }}
+          _groupHover={{
+            _after: {
+              filter: 'blur(20px)',
+            },
+          }}>
+          <Image
+            rounded={'lg'}
+            height={230}
+            width={282}
+            objectFit={'cover'}
+            src={item.image}
+            alt="#"
+          />
+        </Box>
+        <Stack pt={10} align={'center'}>
+          <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
+            Brand
+          </Text>
+          <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
+            {item.title}
+          </Heading>
+          <Stack direction={'row'} align={'center'}>
+            <Text fontWeight={800} fontSize={'xl'}>
+              ${item.price}
+            </Text>
+          </Stack>
+        </Stack>
       </Box>
-      <VStack p="4" spacing="3" alignItems="flex-start" mt={2}>
-        <Text
-          fontWeight="bold"
-          fontSize="2xl"
-          noOfLines={1}
-          bgClip="text"
-          bgGradient="linear(to-r, teal.400, blue.400)"
-        >
-          {item.title}
-        </Text>
-        <Text fontSize="lg" color="gray.700">
-          ${item.price}
-        </Text>
-        <Button
-          colorScheme="teal"
-          variant="solid"
-          w="full"
-          size="md"
-          _hover={{ bg: "teal.500" }}
-          boxShadow="0px 8px 15px rgba(0, 150, 136, 0.2)"
-        >
-          Add to Cart
-        </Button>
-      </VStack>
-    </Box>
-  );
+    </Center>
+  )
 }
-
-export default ProductCard;

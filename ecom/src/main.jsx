@@ -7,7 +7,7 @@ import theme from '../theme.js'
 
 createRoot(document.getElementById('root')).render(
     <Provider store={store}>
-        <ChakraProvider theme={theme}>
+        <ChakraProvider>
             <App />
         </ChakraProvider>
     </Provider>
