@@ -33,7 +33,7 @@ const Slider = ({ i }) => {
                 ref={swiperRef}
                 modules={[Navigation, Autoplay]}
                 autoplay={{ delay: 4000 }}
-                navigation={false} 
+                navigation={false} // Disable default navigation buttons
                 breakpoints={{
                     0: {
                         slidesPerView: 1,
@@ -106,3 +106,4 @@ const Slider = ({ i }) => {
 };
 
 export default Slider;
+
