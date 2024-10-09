@@ -24,7 +24,8 @@ const Contact = () => {
     };
 
     return (
-        <Box p={4} maxW="md" borderWidth={1} borderRadius="lg" boxShadow="lg">
+        <Box w="100%" h="100vh" display={"grid"} >
+            <Box p={4} maxW="md" borderWidth={1} borderRadius="lg" boxShadow="lg"margin={"auto"} minW="35%" >
             <Text fontSize={"2xl"} textAlign={"center"}>Contact Us!</Text>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={!!errors.name}>
@@ -97,6 +98,7 @@ const Contact = () => {
                     Submit
                 </Button>
             </form>
+        </Box>
         </Box>
     );
 };
