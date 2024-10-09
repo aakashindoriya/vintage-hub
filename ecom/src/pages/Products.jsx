@@ -110,7 +110,7 @@ const Products = () => {
                         //                 _after={{
                         //                     transition: 'all .3s ease',
                         //                     content: '""',
-                        //                     w: 'full',
+                        //                     w: 'full',np
                         //                     h: 'full',
                         //                     pos: 'absolute',
                         //                     top: 5,
