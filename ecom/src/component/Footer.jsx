@@ -1,4 +1,3 @@
-
 import { Box, Text, Center } from '@chakra-ui/react';
 
 function Footer() {

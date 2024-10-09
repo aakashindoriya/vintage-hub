@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import HomeWrapper from "./HomeWrapper";
 import Home from "../pages/Home";
+import SignupCard from '../pages/LoginSignup'
 import {RouterProvider} from 'react-router-dom'
+
 
 
 const router=createBrowserRouter([
@@ -11,15 +13,13 @@ const router=createBrowserRouter([
         children:[
             {
                 index:true,
-                element:<Home /> 
+                element:<Home />
+            },
+            {
+                path:"/login",
+                element: <SignupCard/>
             }
         ]
     }
 ])
-
-
-const AllRoutes = () => {
-    return <RouterProvider router={router}></RouterProvider>
-  }
-  
-  export default AllRoutes
+export default router;

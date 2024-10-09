@@ -1,7 +1,9 @@
 import { Box } from '@chakra-ui/react'
 import React from 'react'
 import Slider from '../component/Slider'
+
 import { CarouselData } from '../component/CarouselData'
+
 
 const Home = () => {
   return (
@@ -17,5 +19,4 @@ const Home = () => {
 }
 
 export default Home
-
 

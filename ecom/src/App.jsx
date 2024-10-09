@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -8,16 +9,18 @@ import AllRoutes from './routes/AllRoutes'
 import SignupCard from './pages/LoginSignup'
 
 function App() {
- const dispatch=useDispatch()
- useEffect(()=>{
-  dispatch(getProducts())
- },[])  
-  return (
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
+  return (
     <>
+
      <span>app</span>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

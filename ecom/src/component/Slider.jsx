@@ -106,3 +106,4 @@ const Slider = ({ i }) => {
 };
 
 export default Slider;
+
