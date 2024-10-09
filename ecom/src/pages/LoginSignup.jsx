@@ -1,82 +1,99 @@
-
-
-'use client'
-
-import {
-  Flex,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  HStack,
-  InputRightElement,
-  Stack,
-  Button,
-  Heading,
-  Text,
-  useColorModeValue,
-  Link,
-} from '@chakra-ui/react';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, signup, logout, resetAuthState } from '../redux/slices/AuthSlice'; 
+import { useState, useEffect } from 'react';
+import { useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { Flex, Box, Stack, Heading, Text, FormControl, FormLabel, Input, Button, HStack, Link, InputGroup, InputRightElement, useColorModeValue } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { auth } from '../../firebase.config'; 
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function AuthCard() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const navigate = useNavigate();
+  
+  const authState = useSelector((state) => state.auth) || {};
+  const { user, error } = authState;
 
-  const handleToggleForm = () => {
-    setIsLogin(!isLogin);
-  };
+ 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        dispatch(resetAuthState()); 
+      }
+    });
 
-  const handleSubmit = async (e) => {
+    return () => unsubscribe(); 
+  }, [dispatch]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+    
     if (isLogin) {
-     
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('User logged in:', userCredential.user);
-      } catch (error) {
-        console.error('Login error:', error.message);
-      }
+      dispatch(login({ email, password })).then(() => {
+        dispatch(resetAuthState());
+      });
     } else {
-     
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log('User signed up:', userCredential.user);
-        
-      } catch (error) {
-        console.error('Sign-up error:', error.message);
-      }
+      dispatch(signup({ email, password, firstName, lastName }));
     }
   };
 
+  const handleToggleForm = () => {
+    setIsLogin((prev) => !prev);
+    setFirstName(''); 
+    setLastName('');
+    setEmail('');
+    setPassword('');
+  };
+
+  // const handleLogout = async () => {
+  //   await dispatch(logout());
+  //   dispatch(resetAuthState()); 
+  //   toast({
+  //     title: 'Logged out successfully!',
+  //     status: 'success',
+  //     duration: 3000,
+  //     isClosable: true,
+  //   });
+  // };
+
+  useEffect(() => {
+    if (user) {
+      toast({
+        title: 'Success!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate('/'); 
+    }
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [user, error, toast, navigate]);
+
   return (
-    <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}>
+    <Flex minH={'100vh'} align={'center'} justify={'center'} bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'} textAlign={'center'}>
-            {isLogin ? 'Login' : 'Sign up'}
-          </Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool features ✌️
-          </Text>
+          <Heading fontSize={'4xl'}>{isLogin ? 'Login' : 'Sign up'}</Heading>
+          <Text fontSize={'lg'}>to enjoy all of our cool features ✌️</Text>
         </Stack>
-        <Box
-          rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
-          p={8}>
+        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
           <form onSubmit={handleSubmit}>
             <Stack spacing={4}>
               {!isLogin && (
@@ -84,60 +101,34 @@ export default function AuthCard() {
                   <Box>
                     <FormControl id="firstName" isRequired>
                       <FormLabel>First Name</FormLabel>
-                      <Input
-                        type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                      />
+                      <Input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="lastName">
                       <FormLabel>Last Name</FormLabel>
-                      <Input
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
+                      <Input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     </FormControl>
                   </Box>
                 </HStack>
               )}
               <FormControl id="email" isRequired>
                 <FormLabel>Email address</FormLabel>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
               </FormControl>
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <Input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
                   <InputRightElement h={'full'}>
-                    <Button
-                      variant={'ghost'}
-                      onClick={() => setShowPassword((prev) => !prev)}>
+                    <Button variant={'ghost'} onClick={() => setShowPassword((prev) => !prev)}>
                       {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
               <Stack spacing={10} pt={2}>
-                <Button
-                  loadingText="Submitting"
-                  size="lg"
-                  bg={'blue.400'}
-                  color={'white'}
-                  _hover={{
-                    bg: 'blue.500',
-                  }} 
-                  type="submit">
+                <Button size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500' }} type="submit">
                   {isLogin ? 'Login' : 'Sign up'}
                 </Button>
               </Stack>
@@ -156,8 +147,11 @@ export default function AuthCard() {
               </Stack>
             </Stack>
           </form>
+          {/* Uncomment below to add a logout button */}
+          {/* <Button onClick={handleLogout} mt={4} colorScheme="red">Logout</Button>  */}
         </Box>
       </Stack>
     </Flex>
   );
 }
+
