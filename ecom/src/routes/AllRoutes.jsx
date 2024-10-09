@@ -7,6 +7,8 @@ import Cart from "../pages/Cart";
 import ProtectedRoute from "../component/ProtectedRoute";
 import Profile from "../pages/Profile";
 import SingleProduct from "../pages/SingleProduct"; 
+import SingleBlog from "../pages/blogs/SingleBlog";
+import Blogs from "../pages/blogs/Blogs";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +40,20 @@ const router = createBrowserRouter([
                     {
                         index:true,
                         element:<Cart/>
+                    }
+                ]
+            },
+            {
+                path: "/blogs",
+                element: <HomeWrapper val={true} />,
+                children:[
+                    {
+                        index:true,
+                        element:<Blogs/>
+                    },
+                    {
+                        path:':id',
+                        element:<SingleBlog/>
                     }
                 ]
             },
