@@ -3,12 +3,12 @@ import { Outlet } from 'react-router-dom'
 import Header from '../component/product/Header'
 import Footer from '../component/Footer'
 
-function HomeWrapper() {
+function HomeWrapper({val}) {
   return (
    <>
-   <Header/>
+   {!val && <Header/>}
    <Outlet />
-   <Footer/>
+   {!val && <Footer/>}
    </>
   )
 }

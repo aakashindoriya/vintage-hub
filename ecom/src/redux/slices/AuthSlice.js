@@ -14,7 +14,10 @@ export const signup = createAsyncThunk(
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: `${firstName} ${lastName}` });
-      return { uid: userCredential.user.uid, email: userCredential.user.email, displayName: `${firstName} ${lastName}` };
+      let userData= { uid: userCredential.user.uid, email: userCredential.user.email, firstName: userCredential.user.firstName };
+      // localStorage.setItem('user',JSON.stringify(userData));
+      // console.log(userData)
+      return userData
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -26,7 +29,9 @@ export const login = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return { uid: userCredential.user.uid, email: userCredential.user.email, displayName: userCredential.user.displayName };
+      const userData= { uid: userCredential.user.uid, email: userCredential.user.email, firstName: userCredential.user.firstName };
+      localStorage.setItem('user',JSON.stringify(userData));
+      return userData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -58,10 +63,6 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
               state.user = action.payload; 
               state.status = 'succeeded';
               state.error = null;
-            })
-            .addCase(signup.rejected, (state, action) => {
-              state.error = action.payload;
-              state.status = 'failed';
             })
             .addCase(login.pending, (state) => {
               state.status = 'loading';

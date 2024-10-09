@@ -5,7 +5,7 @@ import { getProducts } from "../actions/productActions";
 const productSlice=createSlice({
     name:"product",
     initialState:{
-       proudcts:[],
+       products:[],
        loading:false,
        error:false
     },reducers:{},
@@ -16,7 +16,7 @@ const productSlice=createSlice({
         .addCase(getProducts.fulfilled,(state,action)=>{
             state.loading=false
             state.error=false
-            state.proudcts=action.payload
+            state.products=action.payload
         }).addCase(getProducts.rejected,(state)=>{
             state.error=true
         })
