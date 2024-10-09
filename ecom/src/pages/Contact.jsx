@@ -1,17 +1,21 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, Input, Text } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Input, Text, useToast } from '@chakra-ui/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { postData } from '../redux/actions/fireStoreActions';
 
 const Contact = () => {
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-
-    const onSubmit = (values) => {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                resolve();
-            }, 3000);
-        });
+    const { register, handleSubmit,reset, formState: { errors, isSubmitting } } = useForm();
+    const toast=useToast()
+    const onSubmit =async (values) => {
+         await postData(values)
+         toast({
+            title: 'Thanks.',
+            description: "Your message has been successfully submitted!",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+         return reset()
     };
 
     const wordCountValidation = (value) => {
@@ -23,7 +27,7 @@ const Contact = () => {
         <Box p={4} maxW="md" borderWidth={1} borderRadius="lg" boxShadow="lg">
             <Text fontSize={"2xl"} textAlign={"center"}>Contact Us!</Text>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormControl isInvalid={errors.name}>
+                <FormControl isInvalid={!!errors.name}>
                     <FormLabel>Enter Name</FormLabel>
                     <Input 
                         id="name"
@@ -36,7 +40,7 @@ const Contact = () => {
                     <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
                 </FormControl>
                 
-                <FormControl isInvalid={errors.email} mt={4}>
+                <FormControl isInvalid={!!errors.email} mt={4}>
                     <FormLabel>Enter Email</FormLabel>
                     <Input 
                         id="email"
@@ -56,7 +60,7 @@ const Contact = () => {
                     <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
                 </FormControl>
                 
-                <FormControl isInvalid={errors.message} mt={4}>
+                <FormControl isInvalid={!!errors.message} mt={4}>
                     <FormLabel>Message</FormLabel>
                     <Input 
                         id="message"
@@ -70,19 +74,16 @@ const Contact = () => {
                     <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
                 </FormControl>
                 
-                <FormControl isInvalid={errors.phone} mt={4}>
+                <FormControl isInvalid={!!errors.phone} mt={4}>
                     <FormLabel>Phone</FormLabel>
                     <Input 
                         id="phone"
                         placeholder='Enter Phone'
-                        type='tel' // Change type to 'tel' for better input handling
+                        type='tel' // Use 'tel' for better input handling
                         {...register("phone", {
                             required: "Phone is required",
                             validate: {
-                                maxLength: {
-                                    value: 10,
-                                    message: 'Maximum length should be 10 digits'
-                                },
+                                maxLength: (v) => v.length === 10 || "Phone number must be exactly 10 digits",
                                 matchPattern: (v) =>
                                     /^(?:\+91|91|0)?[789]\d{9}$/.test(v) ||
                                     "Phone number must be valid",
