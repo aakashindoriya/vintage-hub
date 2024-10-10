@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Spinner, Text, Button, Input, Select, Checkbox } from "@chakra-ui/react";
+import { Box, Spinner, Text, Button } from "@chakra-ui/react";
 import { ProductCarouselData } from "../component/ProductCarouselData";
 import ProductCard from "../component/product/ProductCard"; 
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { getProducts } from "../redux/actions/productActions";
 import ProductSlider from "../component/ProductSlider";
 import Filters from "../component/product/Filters";
 import { filter } from "../redux/slices/productSlice";
+import Pagination from "../component/product/Pagination";
 
 let init={
     category:"", rating:0, pricerange:{min:0,max:15000},brand:"",inStock:""
@@ -67,29 +68,16 @@ const Products = () => {
 
             {/* Product Grid */}
             <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6} p={10} mt={-8}>
-               {
-                filtered.length?filtered.map((el)=><ProductCard key={el.id} product={el} />):products.map((el)=><ProductCard key={el.id} product={el} />)
-               }
+            { 
+                filtered.length? filtered.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                )) : products.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                ))
+            }
                
             </Box>
-            <Box mt={6} display="flex" justifyContent="center" alignItems="center">
-                <Button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))} disabled={currentPage === 0}>
-                    Previous
-                </Button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <Button 
-                        key={index} 
-                        onClick={() => setCurrentPage(index)} 
-                        variant={currentPage === index ? "solid" : "outline"}
-                        mx={1}
-                    >
-                        {index + 1}
-                    </Button>
-                ))}
-                <Button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))} disabled={currentPage === totalPages - 1}>
-                    Next
-                </Button>
-            </Box>
+            <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalPages={totalPages} />
         </Box>
     );
 };
