@@ -53,7 +53,10 @@ const Cart = () => {
             ) : (
                 <Grid px={28} templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
                     {cartItems.map((item) => (
+
                         <CartCard key={item._id} product={item}/>
+
+
                     ))}
                 </Grid>
             )}
