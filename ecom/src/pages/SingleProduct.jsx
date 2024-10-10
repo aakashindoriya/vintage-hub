@@ -15,7 +15,10 @@ import {
   Button,
   Stack,
   Flex,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
+import { StarIcon } from "@chakra-ui/icons";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -65,16 +68,16 @@ const SingleProduct = () => {
         bg="white"
       >
         <Box p={4}>
-          <Image
-            src={product.image}
-            alt={product.title}
-            boxSize={{ base: "100%", md: "500px" }}
-            objectFit="cover"
-            borderRadius="md"
-            borderWidth={2}
-            borderColor="teal.500"
-            mb={{ base: 4, md: 0 }}
-          />
+        <Image
+  src={product.image}
+  alt={product.title}
+  boxSize={{ base: "100%", md: "500px" }} // Ensure this is adequate for your layout
+  objectFit="contain" // Change this to "contain" to avoid cropping
+  borderRadius="md"
+  borderWidth={2}
+  borderColor="teal.500"
+  mb={{ base: 4, md: 0 }}
+/>
         </Box>
         <Box ml={{ md: 4 }} p={6} bg="white" borderRadius="md" boxShadow="lg">
           <Heading size="lg" color="teal.600">{product.title}</Heading>
@@ -82,6 +85,25 @@ const SingleProduct = () => {
           <Text fontSize="2xl" color="teal.500" mt={2}>
             Price: ${product.price}
           </Text>
+
+          {/* Product Rating */}
+          <HStack spacing={1} mt={2}>
+            {Array.from({ length: 5 }, (_, i) => (
+              <Icon
+                key={i}
+                as={StarIcon}
+                color={i < Math.round(product.rating.rate) ? "yellow.400" : "gray.300"} 
+                boxSize={5}
+              />
+            ))}
+            <Text color="gray.500">({product.rating.count})</Text>
+          </HStack>
+
+          {/* Product Description */}
+          <Text mt={4} fontSize="lg" color="gray.700">
+            {product.description}
+          </Text>
+
           {cartItem ? (
             <Stack direction="row" align="center" mt={4}>
               <Button colorScheme="teal" onClick={handleDecrement}>-</Button>

@@ -1,11 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { login, signup,  resetAuthState } from '../redux/slices/AuthSlice'; 
+import { login, signup, resetAuthState } from '../redux/slices/AuthSlice';
 import { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { Flex, Box, Stack, Heading, Text, FormControl, FormLabel, Input, Button, HStack, Link, InputGroup, InputRightElement, useColorModeValue } from '@chakra-ui/react';
+import {
+  Flex, Box, Stack, Heading, Text, FormControl, FormLabel, Input, Button, HStack, Link,
+  InputGroup, InputRightElement, useColorModeValue
+} from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { auth } from '../../firebase.config'; 
+import { auth } from '../../firebase.config';
 import { onAuthStateChanged } from 'firebase/auth';
 
 export default function AuthCard() {
@@ -15,28 +18,66 @@ export default function AuthCard() {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  
+
   const dispatch = useDispatch();
   const toast = useToast();
   const navigate = useNavigate();
-  
+
   const authState = useSelector((state) => state.auth) || {};
   const { user, error } = authState;
 
- 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        dispatch(resetAuthState()); 
+        dispatch(resetAuthState());
       }
     });
 
-    return () => unsubscribe(); 
+    return () => unsubscribe();
   }, [dispatch]);
+
+  
+  const isValidName = (name) => /^[a-zA-Z]+$/.test(name);
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPassword = (password) => password.length >= 6;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
+ 
+    if (!isValidEmail(email)) {
+      toast({
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!isValidPassword(password)) {
+      toast({
+        title: 'Invalid Password',
+        description: 'Password must be at least 6 characters long.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!isLogin && (!isValidName(firstName) || !isValidName(lastName))) {
+      toast({
+        title: 'Invalid Name',
+        description: 'First and Last names must contain only letters.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (isLogin) {
       dispatch(login({ email, password })).then(() => {
         dispatch(resetAuthState());
@@ -48,27 +89,16 @@ export default function AuthCard() {
 
   const handleToggleForm = () => {
     setIsLogin((prev) => !prev);
-    setFirstName(''); 
+    setFirstName('');
     setLastName('');
     setEmail('');
     setPassword('');
   };
+
   const handleSignUp = () => {
     setIsLogin((prev) => !prev);
-    navigate('/login')
+    navigate('/login');
   };
-
-
-  // const handleLogout = async () => {
-  //   await dispatch(logout());
-  //   dispatch(resetAuthState()); 
-  //   toast({
-  //     title: 'Logged out successfully!',
-  //     status: 'success',
-  //     duration: 3000,
-  //     isClosable: true,
-  //   });
-  // };
 
   useEffect(() => {
     if (user) {
@@ -78,7 +108,7 @@ export default function AuthCard() {
         duration: 3000,
         isClosable: true,
       });
-      navigate('/'); 
+      navigate('/');
     }
     if (error) {
       toast({
@@ -152,11 +182,8 @@ export default function AuthCard() {
               </Stack>
             </Stack>
           </form>
-          {/* Uncomment below to add a logout button */}
-          {/* <Button onClick={handleLogout} mt={4} colorScheme="red">Logout</Button>  */}
         </Box>
       </Stack>
     </Flex>
   );
 }
-
