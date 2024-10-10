@@ -3,13 +3,14 @@ import Slider from "../component/Slider";
 
 import { CarouselData } from "../component/CarouselData";
 import FeaturedProducts from "../component/product/FeaturedProducts";
+import ProductSlider from "../component/ProductSlider";
 
 const Home = () => {
   return (
     <>
       <Box>
         <Box as="section" id="Slider-Section">
-          <Slider i={CarouselData} />
+          <ProductSlider i={CarouselData}/>
         </Box>
         <Box position="relative" mt={10}>
           <Box
