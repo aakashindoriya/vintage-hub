@@ -5,6 +5,7 @@ import ProductCard from "../component/product/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../redux/actions/productActions"; 
 import ProductSlider from "../component/ProductSlider";
+import TempCartCard from "../component/TempCartCard";
 
 const Products = () => {
     const dispatch = useDispatch();
