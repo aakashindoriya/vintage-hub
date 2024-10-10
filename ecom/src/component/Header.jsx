@@ -2,7 +2,7 @@ import { Box, Flex, Heading, Text, Button, Avatar, Select } from "@chakra-ui/rea
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { selectCurrency } from "../redux/slices/currencySlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCurrency } from "../redux/actions/currencyActions";
 // import { useEffect, useState } from 'react';
 // import { auth } from '../../../firebase.config';
@@ -12,6 +12,11 @@ const Header = () => {
   let user = JSON.parse(localStorage.getItem("user"));
   const dispatch=useDispatch()
   const {seletedRate}=useSelector((store)=>store.currency)
+  const [currencyState, setCurrentState] = useState('USD');
+
+  useEffect(()=>{
+    dispatch(selectCurrency(currencyState))
+  },[currencyState])
   // const { isOpen, onOpen, onClose } = useDisclosure();
   // const [newPassword, setNewPassword] = useState('');
   // const toast = useToast();
@@ -118,8 +123,8 @@ const Header = () => {
               Login/Sign Up
             </Button>
           )}
-          <Select onChange={(e)=>{
-            dispatch(selectCurrency(e.target.value))
+          <Select value={currencyState} onChange={(e)=>{
+            setCurrentState(e.target.value)
           }} >
             <option value="USD">USD</option>
             <option value="INR">INR</option>
