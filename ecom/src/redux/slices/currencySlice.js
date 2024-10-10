@@ -6,11 +6,18 @@ const currencySlice=createSlice({
     name:"currency",
     initialState:{
         currencies:{},
-        seletedRate:1
+        seletedRate:1,
+        symbol:"$"
     },
     reducers:{
         selectCurrency:(state,action)=>{
-            state.seletedRate=state.currencies[action.payload]
+            if(action.payload==="USD"){
+                state.seletedRate=1
+                state.symbol="$"
+            }else{
+                state.seletedRate=state.currencies[action.payload]
+                state.symbol=action.payload==="AUD"?"AU$":"₹"
+            }
         }
     },
     extraReducers:(builder) =>{
