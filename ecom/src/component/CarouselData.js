@@ -1,22 +1,28 @@
+
+import pic1 from '../assets/pic1.jpg';
+import pic2 from '../assets/pic2.jpg';
+import pic3 from '../assets/pic3.jpg';
+import pic4 from '../assets/pic4.jpg';
+
 export const CarouselData = [
     {
-        img:'https://images.unsplash.com/photo-1726682577615-728e4272a60c?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        img:pic1,
         title:'LandRover',
     },
     {
-        img:'https://images.unsplash.com/photo-1727709350469-5fde916217a8?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        img:pic2,
         title:'Mountains',
     },
     {
-        img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        img:pic3,
         title:'Scenery',
     },
     {
-        img:'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        img:pic4,
         title:'Scenery2',
     },
     {
-        img:'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        img:pic1,
         title:'Scenery3',
     },
 ]
