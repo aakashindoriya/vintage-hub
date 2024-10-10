@@ -9,6 +9,8 @@ import Profile from "../pages/Profile";
 import SingleProduct from "../pages/SingleProduct"; 
 import SingleBlog from "../pages/blogs/SingleBlog";
 import Blogs from "../pages/blogs/Blogs";
+import Contact from "../pages/Contact";
+import Messages from "../pages/Messages";
 
 const router = createBrowserRouter([
     {
@@ -74,6 +76,12 @@ const router = createBrowserRouter([
                         <Profile />
                     </ProtectedRoute>
                 )
+            },{
+                path:"/contact",
+                element:<Contact />
+            },{
+                path:"/message",
+                element:<Messages />
             }
         ]
     }
