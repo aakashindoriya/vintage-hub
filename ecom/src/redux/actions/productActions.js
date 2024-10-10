@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const getProducts=createAsyncThunk("product/getproducts",async()=>{
     try {
-        const {data}= await axios.get(`${import.meta.env.VITE_FAKE_STORE_API}?limit=${limit}`)
+        const {data}= await axios.get(`${import.meta.env.VITE_FAKE_STORE_API}`)
         return data
     } catch (error) {
         console.log(error)
@@ -12,7 +12,7 @@ export const getProducts=createAsyncThunk("product/getproducts",async()=>{
 })
 
 
-export const filterData = (originalData, category, rating, priceRange,brand) => {
+export const filterData = (originalData, category, rating, priceRange,brand, inStock) => {
     console.log(originalData, category, rating, priceRange, "in action");
 
     return originalData.filter((el) => {
