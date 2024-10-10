@@ -6,15 +6,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../redux/actions/productActions"; 
 import ProductSlider from "../component/ProductSlider";
 import TempCartCard from "../component/TempCartCard";
+import { filter } from "../redux/slices/productSlice";
 
 const Products = () => {
     const dispatch = useDispatch();
-    const { products, loading, error } = useSelector((state) => state.product);
+    const { products, loading, error , filtered} = useSelector((state) => state.product);
 
     // State for filters and sorting
     const [searchTerm, setSearchTerm] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState('');
-    const [ratingFilter, setRatingFilter] = useState(null); 
+    const [filteredArray, setFilteredArray] = useState([]);
+    const [category, setCategory] = useState('');
+    const [rating, setRating] = useState(null); 
+    const [pricerange, setPriceRange] = useState({
+        min: 0,
+        max:15000
+    }); 
     const [sortOrder, setSortOrder] = useState('lowToHigh'); 
     const itemsPerPage = 5; 
     const [currentPage, setCurrentPage] = useState(0);
@@ -22,6 +28,10 @@ const Products = () => {
     useEffect(() => {
         dispatch(getProducts());
     }, [dispatch]);
+
+    useEffect(()=>{
+        dispatch(filter({products,category,rating,pricerange}))
+    },[products,category,rating,pricerange])
 
     if (loading) {
         return (
@@ -44,20 +54,10 @@ const Products = () => {
     }
 
     // Filter logic
-    const filteredProducts = products.filter(product => {
-        const matchesSearch = (product.name || "").toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
-        const matchesRating = ratingFilter ? product.rating >= ratingFilter : true; // Assuming rating is numeric
-        return matchesSearch && matchesCategory && matchesRating;
-    });
-
-    // Sort logic
-    const sortedProducts = filteredProducts.sort((a, b) => {
-        return sortOrder === 'lowToHigh' ? a.price - b.price : b.price - a.price;
-    });
+    
 
     // Pagination
-    const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+    const totalPages = Math.ceil(filtered.length? filtered.length : products.length / itemsPerPage);
 
     return (
         <Box>
@@ -99,9 +99,13 @@ const Products = () => {
 
             {/* Product Grid */}
             <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6} p={10} mt={-8}>
-                {sortedProducts.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
+                { 
+                filtered.length? filtered.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
                     <ProductCard key={product.id} product={product} />
-                ))}
+                )) : products.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                ))
+            }
             </Box>
 
             {/* Pagination Controls */}

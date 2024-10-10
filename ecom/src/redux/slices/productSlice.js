@@ -1,14 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getProducts } from "../actions/productActions";
+import { filterData, getProducts } from "../actions/productActions";
 
 
 const productSlice=createSlice({
     name:"product",
     initialState:{
        products:[],
+       filtered:[],
        loading:false,
        error:false
-    },reducers:{},
+    },reducers:{
+        filter:(state,action)=>{
+            let result=filterData(action.payload.products,action.payload.category,action.payload.rating,action.payload.pricerange)
+            state.filtered=result
+        }
+    },
     extraReducers:(builder)=>{
         builder.addCase(getProducts.pending,(state)=>{
             state.loading=true
@@ -23,5 +29,5 @@ const productSlice=createSlice({
     }   
 
 })
-
+export const {filter} =productSlice.actions
 export default productSlice.reducer

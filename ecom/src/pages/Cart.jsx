@@ -45,18 +45,22 @@ const Cart = () => {
     }
 
     return (
-        <Box p={6}>
-            <Heading mb={4}>Shopping Cart</Heading>
+        <Box p={4}>
+            <br /><br /><br />
+            <Heading px={28} fontSize='xl' mb={4}>Shopping Cart</Heading>
             {cartItems.length === 0 ? (
                 <Text>Your cart is empty.</Text>
             ) : (
-                <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
+                <Grid px={28} templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
                     {cartItems.map((item) => (
-                        <CartCard key={item.id} product={item}/>
+
+                        <CartCard key={item._id} product={item}/>
+
+
                     ))}
                 </Grid>
             )}
-            <Text fontWeight="bold" mt={4}>Total Price: {symbol}{(totalPrice*seletedRate).toFixed(2)}</Text>
+            <Text px={28} fontWeight="bold" mt={4}>Total Price: {symbol}{(totalPrice*seletedRate).toFixed(2)}</Text>
         </Box>
     );
 };

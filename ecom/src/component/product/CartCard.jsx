@@ -20,19 +20,27 @@ import {
   } from "../../redux/slices/cartSlice";
 
 function CartCard({ product }) {
+
     const dispatch = useDispatch();
     const { seletedRate, symbol } = useSelector((store) => store.currency);
     const cartItems = useSelector((state) => state.cart.items);
     const handleAddToCart = (product) => {
+
+        const existingItem = cartItems.find((item) => item._id === product._id);
+        if (existingItem) {
+          dispatch(incrementQuantity(product._id));
+
         const existingItem = cartItems.find((item) => item.id === product.id);
         if (existingItem) {
           dispatch(incrementQuantity(product.id));
+
         } else {
           dispatch(addItem(product));
         }
       };
     
       const handleIncrement = (id) => {
+
         dispatch(incrementQuantity(id));
       };
     
@@ -71,19 +79,30 @@ function CartCard({ product }) {
                             pos: 'absolute',
                             top: 5,
                             left: 0,
+
+                            backgroundImage: `url(${product.url})`,
                             backgroundImage: `url(${product.image})`,
+
 
                             filter: 'blur(15px)',
                             zIndex: -1,
                         }}
                     >
-                        <Link to={`/products/${product.id}`}>
+
+                        <Link to={`/products/${product._id}`}>
+
+                     
+
                             <Image
                                 rounded={'lg'}
                                 height={230}
                                 width={282}
                                 objectFit={'cover'}
+
+                                src={product.url}
+
                                 src={product.image}
+
                                 alt={product.title}
                             />
                         </Link>
@@ -111,10 +130,14 @@ function CartCard({ product }) {
                             </Text>
                         </Stack>
                         <Stack direction="row" align="center" spacing={4}>
-                            <Button onClick={() => handleDecrement(product.id)}>-</Button>
+
+                            <Button onClick={() => handleDecrement(product._id)}>-</Button>
                             <Text>{product.quantity}</Text>
-                            <Button onClick={() => handleIncrement(product.id)}>+</Button>
-                            <Button colorScheme="red" onClick={() => handleRemove(product.id)}>
+                            <Button onClick={() => handleIncrement(product._id)}>+</Button>
+                            <Button colorScheme="red" onClick={() => handleRemove(product._id)}>
+
+                            
+<Button colorScheme="red" onClick={() => handleRemove(product._id)}>
                                 Remove
                             </Button>
                         </Stack>
@@ -125,4 +148,8 @@ function CartCard({ product }) {
     )
 }
 
-export default CartCard
+
+export default CartCard;
+
+
+

@@ -28,22 +28,22 @@ const cartSlice=createSlice({
             saveCartToLocalStorage(state.items)
         },
         incrementQuantity:(state,action)=>{
-            let updatedItems=state.items.map((el)=>el.id===action.payload?{...el,quantity:el.quantity+1}:el)
+            let updatedItems=state.items.map((el)=>el._id===action.payload?{...el,quantity:el.quantity+1}:el)
             state.items=updatedItems
             saveCartToLocalStorage(state.items)
         },
         decrementQuantity:(state,action)=>{
-            let findItem=state.items.find((el)=>el.id===action.payload)
+            let findItem=state.items.find((el)=>el._id===action.payload)
             if(findItem.quantity<=1){
-                state.items=state.items.filter((el)=>el.id!==action.payload)
+                state.items=state.items.filter((el)=>el._id!==action.payload)
             }else{
-                let updatedItems=state.items.map((el)=>el.id===action.payload?{...el,quantity:el.quantity-1}:el)
+                let updatedItems=state.items.map((el)=>el._id===action.payload?{...el,quantity:el.quantity-1}:el)
                 state.items=updatedItems
             }
             saveCartToLocalStorage(state.items)
         },
         removeItem:(state,action)=>{
-            state.items=state.items.filter((el)=>el.id!==action.payload)
+            state.items=state.items.filter((el)=>el._id!==action.payload)
             saveCartToLocalStorage(state.items)
         }
     }

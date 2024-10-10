@@ -24,6 +24,7 @@ const ProductCard = ({ product }) => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const {isAuth }= useSelector((state)=> state.auth)
+  console.log(isAuth)
   const { seletedRate, symbol } = useSelector((store) => store.currency);
   // console.log(selectedRate, "from product card");
 
@@ -32,9 +33,9 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = (product) => {
     if(isAuth){
-      const existingItem = cartItems.find((item) => item.id === product.id);
+      const existingItem = cartItems.find((item) => item._id === product._id);
       if (existingItem) {
-        dispatch(incrementQuantity(product.id));
+        dispatch(incrementQuantity(product._id));
       } else {
         dispatch(addItem(product));
       }
@@ -52,7 +53,7 @@ const ProductCard = ({ product }) => {
     dispatch(decrementQuantity(id));
   };
 
-  const cartItem = cartItems.find((item) => item.id === product.id);
+  const cartItem = cartItems.find((item) => item._id === product._id);
 
   return (
     <Center py={12}>
@@ -82,19 +83,19 @@ const ProductCard = ({ product }) => {
             pos: "absolute",
             top: 5,
             left: 0,
-            backgroundImage: `url(${product.image})`,
+            backgroundImage: `url(${product.url})`,
             filter: "blur(15px)",
             zIndex: -1,
             borderRadius: 'lg',
           }}
         >
-          <Link to={`/products/${product.id}`}>
+          <Link to={`/products/${product._id}`}>
             <Image
               rounded={"lg"}
               height={230}
               width={282}
               objectFit={"cover"}
-              src={product.image}
+              src={product.url}
               alt={product.title}
             />
           </Link>
@@ -121,7 +122,7 @@ const ProductCard = ({ product }) => {
               <Icon
                 key={i}
                 as={StarIcon}
-                color={i < Math.round(product.rating.rate) ? "yellow.400" : "gray.300"}
+                color={i < Math.round(product.totalRating) ? "yellow.400" : "gray.300"}
                 boxSize={5}
               />
             ))}
@@ -133,9 +134,9 @@ const ProductCard = ({ product }) => {
           </Stack>
           {cartItem ? (
             <Stack direction="row" align="center" mt={3}>
-              <Button onClick={() => handleDecrement(product.id)}>-</Button>
+              <Button onClick={() => handleDecrement(product._id)}>-</Button>
               <Text fontWeight={600}>{cartItem.quantity}</Text>
-              <Button onClick={() => handleIncrement(product.id)}>+</Button>
+              <Button onClick={() => handleIncrement(product._id)}>+</Button>
             </Stack>
           ) : (
             <Stack direction="column" align="center" mt={3}>
@@ -144,11 +145,11 @@ const ProductCard = ({ product }) => {
                   onClick={() => handleAddToCart(product)}
                   size="lg"
                   width="full"
-                  bg="rgba(189, 195, 199, 0.9)"
-                  // backdropFilter="blur(40px)"// Blur effect for the glass
+                  bg="rgba(189, 195, 199, 0.1)"
+                  backdropFilter="blur(40px)"// Blur effect for the glass
                   color="black" // Text color
                   _hover={{
-                    bg: "rgba(189, 195, 199, 0.4)", // Slightly more opaque on hover
+                    bg: "rgba(189, 195, 199, 0.9)", // Slightly more opaque on hover
                     borderColor: "rgba(255, 255, 255, 0.6)", // Border color change on hover
                   }}
                   boxShadow="md" // Optional: add some shadow for depth
