@@ -22,7 +22,8 @@ import { StarIcon } from "@chakra-ui/icons";
 const ProductCard = ({ product }) => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
-  
+  const {seletedRate,symbol} =useSelector((store)=>store.currency)
+  console.log(seletedRate,"from product card")
   // Check if the user is logged in
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -123,10 +124,7 @@ const ProductCard = ({ product }) => {
           </HStack>
           <Stack direction={"row"} align={"center"} justify={"center"} mt={2}>
             <Text fontWeight={800} fontSize={"xl"}>
-              ${product.price}
-            </Text>
-            <Text textDecoration={"line-through"} color={"gray.600"}>
-              ${product.originalPrice}
+              {symbol+" "}{(+product.price*seletedRate).toFixed(2)}
             </Text>
           </Stack>
           {cartItem ? (

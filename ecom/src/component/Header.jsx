@@ -1,17 +1,21 @@
-import { Box, Flex, Heading, Text, Button, Avatar } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Button, Avatar, Select } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { selectCurrency } from "../redux/slices/currencySlice";
+import { useEffect } from "react";
+import { getCurrency } from "../redux/actions/currencyActions";
 // import { useEffect, useState } from 'react';
 // import { auth } from '../../../firebase.config';
 // import { signOut, updatePassword, onAuthStateChanged } from 'firebase/auth';
 
 const Header = () => {
   let user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
+  const dispatch=useDispatch()
+  const {seletedRate}=useSelector((store)=>store.currency)
   // const { isOpen, onOpen, onClose } = useDisclosure();
   // const [newPassword, setNewPassword] = useState('');
   // const toast = useToast();
   const navigate = useNavigate();
-
   // useEffect(() => {
   //     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
   //         if (currentUser) {
@@ -63,7 +67,9 @@ const Header = () => {
   //         });
   //     }
   // };
-
+ useEffect(()=>{
+  dispatch(getCurrency())
+ },[])
   const randomColor = () => {
     const colors = ["red", "green", "blue", "orange", "purple", "teal"];
     return colors[Math.floor(Math.random() * colors.length)];
@@ -112,6 +118,13 @@ const Header = () => {
               Login/Sign Up
             </Button>
           )}
+          <Select onChange={(e)=>{
+            dispatch(selectCurrency(e.target.value))
+          }} >
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+            <option value="AUD">AUD</option> 
+          </Select>
         </Flex>
       </Flex>
 
