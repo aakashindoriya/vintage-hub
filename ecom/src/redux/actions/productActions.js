@@ -12,22 +12,16 @@ export const getProducts=createAsyncThunk("product/getproducts",async()=>{
 })
 
 
-export const filterData=(orignalData,category,rating,pricerange)=>{
-    console.log(orignalData,category,rating,pricerange,"in action")
-    let result=[]
-    if(category&&rating){
-        result=orignalData.filter((el)=>el.category===category&&el.totalRating>=rating&&el.price>=pricerange.min&&el.price<=pricerange.max)
-        console.log("first")
-    }
-    else if(category){
-        console.log("second")
-        result=orignalData.filter((el)=>el.category===category&&el.price>=pricerange.min&&el.price<=pricerange.max)
-    }
-    else if(rating){
-        
-        result=orignalData.filter((el)=>el.totalRating>=rating&&el.price>=pricerange.min&&el.price<=pricerange.max)
-    }else{
-        result=orignalData.filter((el)=>el.price>=pricerange.min&&el.price<=pricerange.max)
-    }
-    return result
-}
+export const filterData = (originalData, category, rating, priceRange,brand) => {
+    console.log(originalData, category, rating, priceRange, "in action");
+
+    return originalData.filter((el) => {
+        const matchesCategory = !category || el.category === category;
+        const matchesRating = !rating || el.totalRating >= rating;
+        const matchesPrice = el.price >= priceRange.min && el.price <= priceRange.max;
+        const matchesBrand =!brand||el.brand===brand
+        const outOfStock=!inStock||el.inStock
+        return matchesCategory && matchesRating && matchesPrice&&matchesBrand;
+    });
+};
+
