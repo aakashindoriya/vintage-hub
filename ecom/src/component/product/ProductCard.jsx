@@ -121,7 +121,7 @@ const ProductCard = ({ product }) => {
               <Icon
                 key={i}
                 as={StarIcon}
-                color={i < Math.round(product.rating.rate) ? "yellow.400" : "gray.300"}
+                color={i < Math.round(product?.rating?.rate) ? "yellow.400" : "gray.300"}
                 boxSize={5}
               />
             ))}

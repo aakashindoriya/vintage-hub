@@ -6,14 +6,13 @@ export const getProducts=createAsyncThunk("product/getproducts",async()=>{
     try {
         const {data}= await axios.get(`${import.meta.env.VITE_FAKE_STORE_API}/api/product`)
         return data
-    } catch (error) {
+    } catch (error) { 
         console.log(error)
     }
 })
 
 
-export const filterData = (originalData, category, rating, priceRange,brand) => {
-    console.log(originalData, category, rating, priceRange, "in action");
+export const filterData = (originalData, category, rating, priceRange,brand,inStock) => {
 
     return originalData.filter((el) => {
         const matchesCategory = !category || el.category === category;

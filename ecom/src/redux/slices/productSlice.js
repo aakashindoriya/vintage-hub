@@ -10,9 +10,15 @@ const productSlice=createSlice({
        loading:false,
        error:false
     },reducers:{
-        filter:(state,action)=>{
-            let result=filterData(action.payload.products,action.payload.category,action.payload.rating,action.payload.pricerange)
-            state.filtered=result
+        filter: (state, action) => {
+            const { products, category, rating, pricerange,brand,inStock } = action.payload;
+        
+            if (!products?.length) {
+                state.filtered = [];
+                return;
+            }
+        
+            state.filtered = filterData(products, category, rating, pricerange,brand,inStock);
         }
     },
     extraReducers:(builder)=>{

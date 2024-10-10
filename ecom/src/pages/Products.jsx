@@ -1,28 +1,40 @@
 import { useEffect, useState } from "react";
-import { Box, Spinner, Text, Button, Input, Select } from "@chakra-ui/react";
+import { Box, Spinner, Text, Button, Input, Select, Checkbox } from "@chakra-ui/react";
 import { ProductCarouselData } from "../component/ProductCarouselData";
 import ProductCard from "../component/product/ProductCard"; 
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../redux/actions/productActions"; 
 import ProductSlider from "../component/ProductSlider";
-import TempCartCard from "../component/TempCartCard";
+import Filters from "../component/product/Filters";
+import { filter } from "../redux/slices/productSlice";
 
+let init={
+    category:"", rating:0, pricerange:{min:0,max:15000},brand:"",inStock:""
+}
 const Products = () => {
     const dispatch = useDispatch();
-    const { products, loading, error } = useSelector((state) => state.product);
-
-    // State for filters and sorting
-    const [searchTerm, setSearchTerm] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState('');
-    const [ratingFilter, setRatingFilter] = useState(null); 
-    const [sortOrder, setSortOrder] = useState('lowToHigh'); 
+    const { products, loading, error,filtered } = useSelector((state) => state.product);
+    const [filterState,setFilterState]=useState(init)
     const itemsPerPage = 5; 
     const [currentPage, setCurrentPage] = useState(0);
-
+    
     useEffect(() => {
         dispatch(getProducts());
     }, [dispatch]);
+    useEffect(()=>{
+        dispatch(filter({products,...filterState}))
+    },[filterState])
 
+
+    function handleFilterChange(e){
+        if(e.target.name==="inStock"){
+            setFilterState({...filterState,inStock:e.target.checked})
+        }else if(e.target.name==="rating"){
+            setFilterState({...filterState,rating:Number(e.target.value)})
+        }else{
+            setFilterState({...filterState,[e.target.name]:(e.target.value)})
+        }
+    }
     if (loading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -42,22 +54,7 @@ const Products = () => {
     if (!products || !products.length) {
         return <Text>No products found.</Text>;
     }
-
-    // Filter logic
-    const filteredProducts = products.filter(product => {
-        const matchesSearch = (product.name || "").toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
-        const matchesRating = ratingFilter ? product.rating >= ratingFilter : true; // Assuming rating is numeric
-        return matchesSearch && matchesCategory && matchesRating;
-    });
-
-    // Sort logic
-    const sortedProducts = filteredProducts.sort((a, b) => {
-        return sortOrder === 'lowToHigh' ? a.price - b.price : b.price - a.price;
-    });
-
-    // Pagination
-    const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+    const totalPages = Math.ceil((filtered.length?filtered.length:products.length) / itemsPerPage);
 
     return (
         <Box>
@@ -66,45 +63,15 @@ const Products = () => {
             </Box>
 
             {/* Filter and Search UI */}
-            <Box display="flex" justifyContent="space-between" mb={6}>
-                <Input 
-                    placeholder="Search products..." 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                />
-                <Select 
-                    placeholder="Select category"
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                >
-                    <option value="category1">Category 1</option>
-                    <option value="category2">Category 2</option>
-                    {/* Add more categories as needed */}
-                </Select>
-                <Select 
-                    placeholder="Select rating"
-                    onChange={(e) => setRatingFilter(Number(e.target.value))}
-                >
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                </Select>
-                <Select 
-                    onChange={(e) => setSortOrder(e.target.value)}
-                >
-                    <option value="lowToHigh">Price: Low to High</option>
-                    <option value="highToLow">Price: High to Low</option>
-                </Select>
-            </Box>
+            <Filters products={products} filterState={filterState} handleFilterChange={handleFilterChange} />
 
             {/* Product Grid */}
             <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6} p={10} mt={-8}>
-                {sortedProducts.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
+               {
+                filtered.length?filtered.map((el)=><ProductCard key={el.id} product={el} />):products.map((el)=><ProductCard key={el.id} product={el} />)
+               }
+               
             </Box>
-
-            {/* Pagination Controls */}
             <Box mt={6} display="flex" justifyContent="center" alignItems="center">
                 <Button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))} disabled={currentPage === 0}>
                     Previous
