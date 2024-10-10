@@ -11,6 +11,7 @@ import SingleBlog from "../pages/blogs/SingleBlog";
 import Blogs from "../pages/blogs/Blogs";
 import Contact from "../pages/Contact";
 import Messages from "../pages/Messages";
+import About from "../pages/About";
 
 const router = createBrowserRouter([
     {
@@ -42,6 +43,16 @@ const router = createBrowserRouter([
                     {
                         index:true,
                         element:<Cart/>
+                    }
+                ]
+            },
+            {
+                path: "/about",
+                element: <HomeWrapper val={true} />,
+                children:[
+                    {
+                        index:true,
+                        element:<About/>
                     }
                 ]
             },

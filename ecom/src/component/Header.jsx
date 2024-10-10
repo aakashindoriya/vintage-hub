@@ -1,139 +1,140 @@
-import { Box, Flex, Heading, Text, Button, Avatar, Select } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Button, Avatar, Select, IconButton, Collapse } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { selectCurrency } from "../redux/slices/currencySlice";
 import { useEffect, useState } from "react";
 import { getCurrency } from "../redux/actions/currencyActions";
+import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { logout } from "../redux/slices/AuthSlice";
 // import { useEffect, useState } from 'react';
 // import { auth } from '../../../firebase.config';
 // import { signOut, updatePassword, onAuthStateChanged } from 'firebase/auth';
 
 const Header = () => {
-  let user = JSON.parse(localStorage.getItem("user"));
-  const dispatch=useDispatch()
-  const {seletedRate}=useSelector((store)=>store.currency)
-  const [currencyState, setCurrentState] = useState('USD');
+    
+    const dispatch = useDispatch();
+    const { selectedRate } = useSelector((store) => store.currency);
+    const [currencyState, setCurrentState] = useState('USD');
+    const [isOpen, setIsOpen] = useState(false);
+    let {user}=useSelector((s)=>s.auth)
+    // user=user?.user
+    console.log(user)
+    useEffect(() => {
+        dispatch(selectCurrency(currencyState));
+    }, [currencyState]);
+    
+    
 
-  useEffect(()=>{
-    dispatch(selectCurrency(currencyState))
-  },[currencyState])
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [newPassword, setNewPassword] = useState('');
-  // const toast = useToast();
-  const navigate = useNavigate();
-  // useEffect(() => {
-  //     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-  //         if (currentUser) {
-  //             setUser(currentUser);
-  //         } else {
-  //             setUser(null);
-  //         }
-  //     });
-  //     return () => unsubscribe();
-  // }, []);
+    useEffect(() => {
+        dispatch(getCurrency());
+    }, []);
 
-  const firstName =
-    localStorage.getItem("firstName") ||
-    user?.displayName?.split(" ")[0] ||
-    "User";
+    const randomColor = () => {
+        const colors = ["red", "green", "blue", "orange", "purple", "teal"];
+        return colors[Math.floor(Math.random() * colors.length)];
+    };
 
-//   const handleLogout = async () => {
-//       try {
-//           await signOut(auth);
-//           setUser(null);
-//           localStorage.removeItem('firstName');
-//           onClose();
-//           navigate('/');
-//       } catch (error) {
-//           console.error('Logout failed:', error.message);
-//       }
-//   };
+    return (
+        <Box as="nav" bg="rgba(255, 255, 255, 0.1)" backdropFilter="blur(10px)" position="fixed" width="100%" zIndex="1000" color="black" p={4}>
+            <Flex justify="space-between" align="center" maxW="7xl" mx="auto">
+                <Heading size="lg" letterSpacing="tight">
+                    <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+                        Vintage Hub
+                    </Link>
+                </Heading>
+                <IconButton
+                    icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                    onClick={() => setIsOpen(!isOpen)}
+                    variant="outline"
+                    aria-label="Toggle Menu"
+                    colorScheme="black"
+                    display={{ md: "none" }}
+                />
+                <Flex spacing={8} gap={4} alignItems="center" flexWrap="wrap" display={{ base: isOpen ? "flex" : "none", md: "flex" }}>
+                    <Link to="/products">
+                        <Text _hover={{ color: "red" }} color="black">Products</Text>
+                    </Link>
+                    <Link to="/cart">
+                        <Text _hover={{ color: "red" }} color="black">Cart</Text>
+                    </Link>
+                    <Link to="/contact">
+                        <Text _hover={{ color: "red" }} color="black">Contact</Text>
+                    </Link>
+                    <Link to="/blogs">
+                        <Text _hover={{ color: "red" }} color="black">Blogs</Text>
+                    </Link>
+                    <Link to="/about">
+                        <Text _hover={{ color: "red" }} color="black">About</Text>
+                    </Link>
 
-  // const handlePasswordReset = async () => {
-  //     try {
-  //         if (newPassword) {
-  //             await updatePassword(auth.currentUser, newPassword);
-  //             toast({
-  //                 title: 'Password updated successfully.',
-  //                 status: 'success',
-  //                 duration: 3000,
-  //                 isClosable: true,
-  //             });
-  //             setNewPassword('');
-  //             onClose();
-  //         }
-  //     } catch (error) {
-  //         toast({
-  //             title: 'Password reset failed.',
-  //             description: error.message,
-  //             status: 'error',
-  //             duration: 3000,
-  //             isClosable: true,
-  //         });
-  //     }
-  // };
- useEffect(()=>{
-  dispatch(getCurrency())
- },[])
-  const randomColor = () => {
-    const colors = ["red", "green", "blue", "orange", "purple", "teal"];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
+                    {user && user.uid ? (
+                        <>
+                            <Avatar
+                                bg={randomColor()}
+                                name={user.email}
+                                cursor="pointer"
+                                onClick={() => navigate("/profile")}
+                            />
+                            <Button colorScheme="red" onClick={() => {
+                                dispatch(logout())
+                                navigate('/login');
+                            }}>Log Out</Button>
+                        </>
+                    ) : (
+                        <Button as={Link} to="/login">
+                            Login/Sign Up
+                        </Button>
+                    )}
+                    <Select w='9em' value={currencyState} onChange={(e) => {
+                        setCurrentState(e.target.value);
+                    }} >
+                        <option value="USD">USD</option>
+                        <option value="INR">INR</option>
+                        <option value="AUD">AUD</option>
+                    </Select>
+                </Flex>
+            </Flex>
 
-  return (
-    <Box as="nav" bg="gray.800" color="white" p={4}>
-      <Flex justify="space-between" align="center" maxW="7xl" mx="auto">
-        <Heading size="lg" letterSpacing="tight">
-          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            Vintage Hub
-          </Link>
-        </Heading>
-        <Flex spacing={8} gap={4} alignItems="center">
-          <Link to="/products">
-            <Text _hover={{ textDecoration: "underline" }}>Products</Text>
-          </Link>
-          <Link to="/cart">
-            <Text _hover={{ textDecoration: "underline" }}>Cart</Text>
-          </Link>
-          <Link to="/contact">
-            <Text _hover={{ textDecoration: "underline" }}>Contact</Text>
-          </Link>
-          <Link to="/blogs">
-            <Text _hover={{ textDecoration: "underline" }}>Blogs</Text>
-          </Link>
-          <Link to="/about">
-            <Text _hover={{ textDecoration: "underline" }}>About</Text>
-          </Link>
+            {/* Collapse component for the menu */}
+            <Collapse in={isOpen} animateOpacity>
+                <Flex direction="column" align="center" display={{ md: "none" }}>
+                    <Link to="/products">
+                        <Text _hover={{ color: "red" }} color="black">Products</Text>
+                    </Link>
+                    <Link to="/cart">
+                        <Text _hover={{ color: "red" }} color="black">Cart</Text>
+                    </Link>
+                    <Link to="/contact">
+                        <Text _hover={{ color: "red" }} color="black">Contact</Text>
+                    </Link>
+                    <Link to="/blogs">
+                        <Text _hover={{ color: "red" }} color="black">Blogs</Text>
+                    </Link>
+                    <Link to="/about">
+                        <Text _hover={{ color: "red" }} color="black">About</Text>
+                    </Link>
+                    {user && user.uid ? (
+                        <>
+                            <Avatar
+                                bg={randomColor()}
+                                name={user.email}
+                                cursor="pointer"
+                                onClick={() => navigate("/profile")}
+                            />
+                            <Button colorScheme="red" onClick={() => {
+                                
+                                navigate('/login');
+                            }}>Log Out</Button>
+                        </>
+                    ) : (
+                        <Button as={Link} to="/login">
+                            Login/Sign Up
+                        </Button>
+                    )}
+                </Flex>
+            </Collapse>
 
-          {user && user.uid ? (
-            <>
-              <Avatar
-                bg={randomColor()}
-                name={user.email}
-                cursor="pointer"
-                onClick={() => navigate("/profile")}
-              />
-              <Button colorScheme="red" onClick={()=>{
-                localStorage.removeItem('user')
-                navigate('/login')
-              }}>Log Out</Button>
-            </>
-          ) : (
-            <Button as={Link} to="/login">
-              Login/Sign Up
-            </Button>
-          )}
-          <Select value={currencyState} onChange={(e)=>{
-            setCurrentState(e.target.value)
-          }} >
-            <option value="USD">USD</option>
-            <option value="INR">INR</option>
-            <option value="AUD">AUD</option> 
-          </Select>
-        </Flex>
-      </Flex>
-
-      {/* <Modal isOpen={isOpen} onClose={onClose}>
+            {/* <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>User Profile</ModalHeader>
@@ -169,8 +170,8 @@ const Header = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal> */}
-    </Box>
-  );
+        </Box>
+    );
 };
 
 export default Header;

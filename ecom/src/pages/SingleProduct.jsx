@@ -57,27 +57,27 @@ const SingleProduct = () => {
   const cartItem = cartItems.find((item) => item.id === product.id);
 
   return (
-    <Box p={6} m={4} bgGradient="linear(to-br, teal.300, blue.500)" borderRadius="lg" boxShadow="lg">
+    <Box p={32}  bgGradient="linear(to-br, teal.300, blue.500)" borderRadius="lg" boxShadow="lg">
       <Flex
         direction={{ base: "column", md: "row" }}
         align="center"
         justify="space-evenly"
-        boxShadow="xl" 
+        boxShadow="xl"
         rounded="lg"
         p={5}
         bg="white"
       >
         <Box p={4}>
-        <Image
-  src={product.image}
-  alt={product.title}
-  boxSize={{ base: "100%", md: "500px" }} // Ensure this is adequate for your layout
-  objectFit="contain" // Change this to "contain" to avoid cropping
-  borderRadius="md"
-  borderWidth={2}
-  borderColor="teal.500"
-  mb={{ base: 4, md: 0 }}
-/>
+          <Image
+            src={product.image}
+            alt={product.title}
+            boxSize={{ base: "100%", md: "500px" }} // Ensure this is adequate for your layout
+            objectFit="contain" // Change this to "contain" to avoid cropping
+            borderRadius="md"
+            borderWidth={2}
+            borderColor="teal.500"
+            mb={{ base: 4, md: 0 }}
+          />
         </Box>
         <Box ml={{ md: 4 }} p={6} bg="white" borderRadius="md" boxShadow="lg">
           <Heading size="lg" color="teal.600">{product.title}</Heading>
@@ -92,7 +92,7 @@ const SingleProduct = () => {
               <Icon
                 key={i}
                 as={StarIcon}
-                color={i < Math.round(product.rating.rate) ? "yellow.400" : "gray.300"} 
+                color={i < Math.round(product.rating.rate) ? "yellow.400" : "gray.300"}
                 boxSize={5}
               />
             ))}
