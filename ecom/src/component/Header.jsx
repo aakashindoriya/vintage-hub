@@ -14,6 +14,7 @@ const Header = () => {
     
     const dispatch = useDispatch();
     const { selectedRate } = useSelector((store) => store.currency);
+    const navigate = useNavigate()
     const [currencyState, setCurrentState] = useState('USD');
     const [isOpen, setIsOpen] = useState(false);
     let {user}=useSelector((s)=>s.auth)
