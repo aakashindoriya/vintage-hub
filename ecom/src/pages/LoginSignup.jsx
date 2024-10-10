@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { login, signup, resetAuthState } from '../redux/slices/AuthSlice';
+import { login, signup } from '../redux/slices/AuthSlice';
 import { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -23,18 +23,18 @@ export default function AuthCard() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const authState = useSelector((state) => state.auth) || {};
+  const authState = useSelector((state) => state.auth);
   const { user, error } = authState;
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        dispatch(resetAuthState());
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (!user) {
+  //       dispatch(resetAuthState());
+  //     }
+  //   });
 
-    return () => unsubscribe();
-  }, [dispatch]);
+  //   return () => unsubscribe();
+  // }, [dispatch]);
 
   
   const isValidName = (name) => /^[a-zA-Z]+$/.test(name);
@@ -79,9 +79,7 @@ export default function AuthCard() {
     }
 
     if (isLogin) {
-      dispatch(login({ email, password })).then(() => {
-        dispatch(resetAuthState());
-      });
+      dispatch(login({ email, password }))
     } else {
       dispatch(signup({ email, password, firstName, lastName }));
     }

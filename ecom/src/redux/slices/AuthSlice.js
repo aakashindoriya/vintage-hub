@@ -1,10 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { auth } from '../../../firebase.config';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
+function getStoredUser(){
+  let exist=localStorage.getItem("user")
+  if(exist){
+      return JSON.parse(exist)
+  }
+  return null
+}
+function storeUser(user){
+  localStorage.setItem("user",JSON.stringify(user))
+}
+function  removeUser(){
+  localStorage.removeItem("user")
+}
 
 const initialState = {
-  user: null,
+  user: getStoredUser(),
   status: 'idle',
+  isAuth:false,
   error: null,
 };
 
@@ -48,12 +62,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
     const authSlice = createSlice({
         name: 'auth',
         initialState,
-        reducers: {
-          resetAuthState: (state) => {
-            state.user = null;
-            state.error = null;
-          },
-        },
+        reducers: {},
         extraReducers: (builder) => {
           builder
             .addCase(signup.pending, (state) => {
@@ -70,8 +79,11 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
             })
             .addCase(login.fulfilled, (state, action) => {
               state.user = action.payload; 
+              console.log(state.user)
               state.status = 'succeeded';
+              state.isAuth=true;
               state.error = null;
+              
             })
             .addCase(login.rejected, (state, action) => {
               state.error = action.payload;
@@ -84,7 +96,9 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
             .addCase(logout.fulfilled, (state) => {
               state.user = null;
               state.status = 'idle';
+              state.isAuth = false;
               state.error = null;
+              removeUser()
             })
             .addCase(logout.rejected, (state, action) => {
               state.user=null,  
@@ -94,5 +108,5 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
         },
       });
       
-      export const { resetAuthState } = authSlice.actions;
+      // export const { resetAuthState } = authSlice.actions;
       export default authSlice.reducer;

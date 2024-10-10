@@ -54,7 +54,7 @@ const ProductSlider = ({ i }) => {
                     display="flex" 
                     justifyContent="center" 
                     alignItems="center" 
-                    height="400px" 
+                    height="600px" 
                 >
                     <img 
                         src={item.img} 

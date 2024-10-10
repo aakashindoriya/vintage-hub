@@ -17,6 +17,7 @@ import { incrementQuantity, decrementQuantity, removeItem } from "../redux/slice
 import { Navigate } from "react-router-dom";
 import TempCartCard from "../component/TempCartCard";
 import ProductCard from "../component/product/ProductCard";
+import CartCard from "../component/product/CartCard";
 
 const Cart = () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -51,7 +52,7 @@ const Cart = () => {
             ) : (
                 <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
                     {cartItems.map((item) => (
-                        <ProductCard key={item.id} product={item}/>
+                        <CartCard key={item.id} product={item}/>
                     ))}
                 </Grid>
             )}
