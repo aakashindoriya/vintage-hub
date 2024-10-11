@@ -18,7 +18,7 @@ import {
     addItem,
     incrementQuantity,
     decrementQuantity,
-  } from "../../redux/slices/cartSlice";
+} from "../../redux/slices/cartSlice";
 
 function CartCard({ product }) {
     

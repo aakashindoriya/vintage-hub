@@ -32,13 +32,13 @@ const Cart = () => {
     }
 
     return (
-        <Flex p={4} bg={useColorModeValue("gray.50", "gray.800")} minH="100vh">
+        <Flex p={4} bg={useColorModeValue("gray.50", "gray.800")} flexDir={{base:'column',md:'row'}} alignItems='center'  minH="100vh">
            
-            <Box flex="1">
+            <Box flex={{base:'1',md:'1'}} w={{base:'400px', md:'700px'}}>
                 <Heading textAlign="center" fontSize='2xl' mt={124} mb={6}>Shopping Cart</Heading>
                 {cartItems.length === 0 ? (
                     <Center flexDirection="column" mt={10}>
-                        <Image src="/path/to/empty-cart.png" alt="Empty Cart" boxSize="150px" />
+                        <Image src="https://media.istockphoto.com/id/1352766190/vector/shopaholic-woman-running-with-an-empty-shopping-cart.jpg?s=612x612&w=0&k=20&c=2f0fEX7DqmYbkgY1l5w2-GLwCmLMTFLASnW-UyiPaX4=" alt="Empty Cart" w='90vw' h='80vh'/>
                         <Text fontSize="lg" mt={4}>Your cart is empty.</Text>
                     </Center>
                 ) : (
