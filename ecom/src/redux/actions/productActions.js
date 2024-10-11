@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const getProducts=createAsyncThunk("product/getproducts",async()=>{
     try {
-        const {data}= await axios.get(`${import.meta.env.VITE_FAKE_STORE_API}/api/product`)
+        const {data}= await axios.get(`${import.meta.env.VITE_FAKE_STORE_API}`)
         return data
     } catch (error) { 
         console.log(error)
@@ -12,7 +12,8 @@ export const getProducts=createAsyncThunk("product/getproducts",async()=>{
 })
 
 
-export const filterData = (originalData, category, rating, priceRange,brand,inStock) => {
+export const filterData = (originalData, category, rating, priceRange,brand) => {
+    console.log(originalData, category, rating, priceRange, "in action");
 
     return originalData.filter((el) => {
         const matchesCategory = !category || el.category === category;
@@ -20,7 +21,7 @@ export const filterData = (originalData, category, rating, priceRange,brand,inSt
         const matchesPrice = el.price >= priceRange.min && el.price <= priceRange.max;
         const matchesBrand =!brand||el.brand===brand
         const outOfStock=!inStock||el.inStock
-        return matchesCategory && matchesRating && matchesPrice&&matchesBrand;
+        return matchesCategory && matchesRating && matchesPrice&&matchesBrand&&outOfStock;
     });
 };
 

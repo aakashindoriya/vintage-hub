@@ -42,6 +42,9 @@ const Blogs = () => {
 
     return (
         <Box textAlign='center'>
+        <br />
+        <br />
+        <br />
             <Text fontSize="2xl" mb={4}>Blogs</Text>
             <SimpleGrid columns={[1, 2, 3, 4]} spacing={4} p={4}>
                 {currentBlogs.map((blog) => (

@@ -2,8 +2,8 @@ import { Box } from "@chakra-ui/react";
 import Slider from "../component/Slider";
 
 import { CarouselData } from "../component/CarouselData";
-import FeaturedProducts from "../component/product/FeaturedProducts";
 import ProductSlider from "../component/ProductSlider";
+import FeaturedProducts from "../component/FeaturedProducts";
 
 const Home = () => {
   return (
