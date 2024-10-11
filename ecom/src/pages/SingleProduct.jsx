@@ -20,6 +20,10 @@ import {
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 
+const removeHtmlTags = (description) => {
+  return description.replace(/<\/?[^>]+(>|$)/g, ""); 
+};
+
 const SingleProduct = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -55,6 +59,7 @@ const SingleProduct = () => {
   }
 
   const cartItem = cartItems.find((item) => item._id === product._id);
+  const cleanDescription = removeHtmlTags(product.description);
 
   return (
     <Box p={32} bgGradient="linear(to-br, teal.300, blue.500)" borderRadius="lg" boxShadow="lg">
@@ -72,6 +77,7 @@ const SingleProduct = () => {
             src={product.url}
             alt={product.name}
             boxSize={{ base: "100%", md: "500px" }}
+            minWidth={{base: "300px", md: "500px"}}
             objectFit="contain"
             borderRadius="md"
             borderWidth={2}
@@ -103,7 +109,7 @@ const SingleProduct = () => {
           </HStack>
 
           <Text mt={4} fontSize="lg" color="gray.700">
-            {product.description}
+            {cleanDescription}
           </Text>
 
           {cartItem ? (
