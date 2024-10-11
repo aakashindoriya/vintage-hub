@@ -20,12 +20,16 @@ import {
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 
+const removeHtmlTags = (description) => {
+  return description.replace(/<\/?[^>]+(>|$)/g, ""); 
+};
+
 const SingleProduct = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.product);
   const cartItems = useSelector((state) => state.cart.items);
-  const product = products.find((item) => item._id === id); // Use _id for matching
+  const product = products.find((item) => item._id === id);
 
   useEffect(() => {
     if (!products.length) {
@@ -55,6 +59,7 @@ const SingleProduct = () => {
   }
 
   const cartItem = cartItems.find((item) => item._id === product._id);
+  const cleanDescription = removeHtmlTags(product.description);
 
   return (
     <Box p={32} bgGradient="linear(to-br, teal.300, blue.500)" borderRadius="lg" boxShadow="lg">
@@ -69,9 +74,10 @@ const SingleProduct = () => {
       >
         <Box p={4}>
           <Image
-            src={product.url} // Use the correct field for the image URL
+            src={product.url}
             alt={product.name}
             boxSize={{ base: "100%", md: "500px" }}
+            minWidth={{base: "300px", md: "500px"}}
             objectFit="contain"
             borderRadius="md"
             borderWidth={2}
@@ -86,12 +92,10 @@ const SingleProduct = () => {
             Price: ${product.price}
           </Text>
 
-          {/* Stock Availability */}
           <Text mt={2} fontWeight="bold" color={product.inStock ? "green.500" : "red.500"}>
             {product.inStock ? "In Stock" : "Out of Stock"}
           </Text>
 
-          {/* Product Rating */}
           <HStack spacing={1} mt={2}>
             {Array.from({ length: 5 }, (_, i) => (
               <Icon
@@ -104,9 +108,8 @@ const SingleProduct = () => {
             <Text color="gray.500">({product.ratings.length})</Text>
           </HStack>
 
-          {/* Product Description */}
           <Text mt={4} fontSize="lg" color="gray.700">
-            {product.description}
+            {cleanDescription}
           </Text>
 
           {cartItem ? (
@@ -116,7 +119,7 @@ const SingleProduct = () => {
               <Button colorScheme="teal" onClick={handleIncrement}>+</Button>
             </Stack>
           ) : (
-            product.inStock && ( // Only show button if in stock
+            product.inStock && (
               <Button colorScheme="teal" onClick={handleAddToCart} mt={4} size="lg">
                 Add to Cart
               </Button>
@@ -124,6 +127,31 @@ const SingleProduct = () => {
           )}
         </Box>
       </Flex>
+
+      {/* Reviews Section */}
+      <Box mt={10} p={5} bg="white" borderRadius="md" boxShadow="lg">
+        <Heading size="md" color="teal.600" mb={4}>Reviews</Heading>
+        {product.ratings.length === 0 ? (
+          <Text>No reviews yet.</Text>
+        ) : (
+          product.ratings.map((rating) => (
+            <Box key={rating._id} mb={4} p={4} borderWidth={1} borderColor="gray.200" borderRadius="md">
+              <HStack spacing={1}>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Icon
+                    key={i}
+                    as={StarIcon}
+                    color={i < Math.round(rating.star) ? "yellow.400" : "gray.300"}
+                    boxSize={4}
+                  />
+                ))}
+                <Text color="gray.600">by {rating.postedBy.fullName}</Text>
+              </HStack>
+              <Text mt={2}>{rating.comment}</Text>
+            </Box>
+          ))
+        )}
+      </Box>
     </Box>
   );
 };
