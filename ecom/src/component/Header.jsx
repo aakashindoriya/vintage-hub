@@ -11,7 +11,7 @@ import { logout } from "../redux/slices/AuthSlice";
 // import { signOut, updatePassword, onAuthStateChanged } from 'firebase/auth';
 
 const Header = () => {
-    
+
     const dispatch = useDispatch();
     const { selectedRate } = useSelector((store) => store.currency);
 
@@ -19,14 +19,14 @@ const Header = () => {
 
     const [currencyState, setCurrentState] = useState('USD');
     const [isOpen, setIsOpen] = useState(false);
-    let {user}=useSelector((s)=>s.auth)
+    let { user } = useSelector((s) => s.auth)
     // user=user?.user
     console.log(user)
     useEffect(() => {
         dispatch(selectCurrency(currencyState));
     }, [currencyState]);
-    
-    
+
+
 
     useEffect(() => {
         dispatch(getCurrency());
@@ -53,7 +53,7 @@ const Header = () => {
                     colorScheme="black"
                     display={{ md: "none" }}
                 />
-                <Flex spacing={8} gap={4} alignItems="center" flexWrap="wrap" display={{ base: isOpen ? "flex" : "none", md: "flex" }}>
+                <Flex spacing={8} gap={4} alignItems="center" flexWrap="wrap" display={{ base: "none", md: "flex" }}>
                     <Link to="/products">
                         <Text _hover={{ color: "red" }} color="black">Products</Text>
                     </Link>
@@ -69,7 +69,6 @@ const Header = () => {
                     <Link to="/about">
                         <Text _hover={{ color: "red" }} color="black">About</Text>
                     </Link>
-
                     {user && user.uid ? (
                         <>
                             <Avatar
@@ -79,7 +78,7 @@ const Header = () => {
                                 onClick={() => navigate("/profile")}
                             />
                             <Button colorScheme="red" onClick={() => {
-                                dispatch(logout())
+                                dispatch(logout());
                                 navigate('/login');
                             }}>Log Out</Button>
                         </>
@@ -88,9 +87,7 @@ const Header = () => {
                             Login/Sign Up
                         </Button>
                     )}
-                    <Select w='9em' value={currencyState} onChange={(e) => {
-                        setCurrentState(e.target.value);
-                    }} >
+                    <Select w='9em' value={currencyState} onChange={(e) => setCurrentState(e.target.value)} >
                         <option value="USD">USD</option>
                         <option value="INR">INR</option>
                         <option value="AUD">AUD</option>
@@ -100,7 +97,7 @@ const Header = () => {
 
             {/* Collapse component for the menu */}
             <Collapse in={isOpen} animateOpacity>
-                <Flex direction="column" align="center" display={{ md: "none" }}>
+                <Box  alignItems="center" gap={4} display={{base:'flex', md: "none" }}>
                     <Link to="/products">
                         <Text _hover={{ color: "red" }} color="black">Products</Text>
                     </Link>
@@ -122,10 +119,11 @@ const Header = () => {
                                 bg={randomColor()}
                                 name={user.email}
                                 cursor="pointer"
+                                mr={2}
                                 onClick={() => navigate("/profile")}
                             />
                             <Button colorScheme="red" onClick={() => {
-                                
+                                dispatch(logout());
                                 navigate('/login');
                             }}>Log Out</Button>
                         </>
@@ -134,45 +132,8 @@ const Header = () => {
                             Login/Sign Up
                         </Button>
                     )}
-                </Flex>
+                </Box>
             </Collapse>
-
-            {/* <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>User Profile</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Stack spacing={4}>
-                            <FormControl>
-                                <FormLabel>Username</FormLabel>
-                                <Input value={firstName} readOnly />
-                            </FormControl>
-                            <FormControl>
-                                <FormLabel>Email</FormLabel>
-                                <Input value={user?.email} readOnly />
-                            </FormControl>
-                            <FormControl>
-                                <FormLabel>New Password</FormLabel>
-                                <Input
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="Enter new password"
-                                />
-                            </FormControl>
-                        </Stack>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={handlePasswordReset}>
-                            Reset Password
-                        </Button>
-                        <Button colorScheme="red" onClick={handleLogout}>
-                            Logout
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal> */}
         </Box>
     );
 };
