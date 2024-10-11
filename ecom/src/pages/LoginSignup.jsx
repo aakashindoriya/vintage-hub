@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { login, signup } from '../redux/slices/AuthSlice';
+import {  login,signup } from '../redux/actions/apiAuthActions';
 import { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,7 @@ import {
   InputGroup, InputRightElement, useColorModeValue
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { auth } from '../../firebase.config';
-import { onAuthStateChanged } from 'firebase/auth';
+;
 
 export default function AuthCard() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,8 +22,9 @@ export default function AuthCard() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const authState = useSelector((state) => state.auth);
-  const { user, error } = authState;
+  const authState = useSelector((state) => state.apiAuth);
+  console.log(authState,"update not here")
+  const { isAuth, error } = authState;
 
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -81,7 +81,9 @@ export default function AuthCard() {
     if (isLogin) {
       dispatch(login({ email, password }))
     } else {
-      dispatch(signup({ email, password, firstName, lastName }));
+      dispatch(signup({
+        firstname:firstName, lastname:lastName, gender:"male", email, password, "role":"user"
+    }));
     }
   };
 
@@ -99,7 +101,7 @@ export default function AuthCard() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (isAuth) {
       toast({
         title: 'Success!',
         status: 'success',
@@ -117,7 +119,7 @@ export default function AuthCard() {
         isClosable: true,
       });
     }
-  }, [user, error, toast, navigate]);
+  }, [isAuth, error, toast, navigate]);
 
   return (
     <Flex minH={'100vh'} align={'center'} justify={'center'} bg={useColorModeValue('gray.50', 'gray.800')}>
