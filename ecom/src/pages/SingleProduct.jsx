@@ -64,7 +64,7 @@ const SingleProduct = () => {
   return (
     <Box p={32} bgGradient="linear(to-br, teal.300, blue.500)" borderRadius="lg" boxShadow="lg">
       <Flex
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "column", lg: "row" }}
         align="center"
         justify="space-evenly"
         boxShadow="xl"
